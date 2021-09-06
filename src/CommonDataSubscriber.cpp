@@ -34,6 +34,7 @@ CommonDataSubscriber::CommonDataSubscriber(bool gui) :
 		approxSync_(true),
 		warningThread_(0),
 		callbackCalled_(false),
+		deleteParamsOnStop_(true),
 		subscribedToDepth_(!gui),
 		subscribedToStereo_(false),
 		subscribedToRGB_(!gui),
@@ -341,6 +342,7 @@ void CommonDataSubscriber::setupCallbacks(
 	name_ = name;
 
 	// ROS related parameters (private)
+	pnh.param("delete_params_on_stop", deleteParamsOnStop_, deleteParamsOnStop_);
 	pnh.param("subscribe_depth",     subscribedToDepth_, subscribedToDepth_);
 	if(pnh.getParam("subscribe_laserScan", subscribeScan2d) && subscribeScan2d)
 	{
@@ -915,21 +917,23 @@ CommonDataSubscriber::~CommonDataSubscriber()
 
 	//clear params
 	ros::NodeHandle pnh("~");
-	pnh.deleteParam("subscribe_depth");
-	pnh.deleteParam("subscribe_laserScan");
-	pnh.deleteParam("subscribe_scan");
-	pnh.deleteParam("subscribe_scan_cloud");
-	pnh.deleteParam("subscribe_stereo");
-	pnh.deleteParam("subscribe_rgb");
-	pnh.deleteParam("subscribe_rgbd");
-	pnh.deleteParam("subscribe_odom_info");
-	pnh.deleteParam("subscribe_user_data");
-	pnh.deleteParam("odom_frame_id");
-	pnh.deleteParam("rgbd_cameras");
-	pnh.deleteParam("depth_cameras");
-	pnh.deleteParam("queue_size");
-	pnh.deleteParam("approx_sync");
-	pnh.deleteParam("stereo_approx_sync");
+	if(deleteParamsOnStop_){
+		pnh.deleteParam("subscribe_depth");
+		pnh.deleteParam("subscribe_laserScan");
+		pnh.deleteParam("subscribe_scan");
+		pnh.deleteParam("subscribe_scan_cloud");
+		pnh.deleteParam("subscribe_stereo");
+		pnh.deleteParam("subscribe_rgb");
+		pnh.deleteParam("subscribe_rgbd");
+		pnh.deleteParam("subscribe_odom_info");
+		pnh.deleteParam("subscribe_user_data");
+		pnh.deleteParam("odom_frame_id");
+		pnh.deleteParam("rgbd_cameras");
+		pnh.deleteParam("depth_cameras");
+		pnh.deleteParam("queue_size");
+		pnh.deleteParam("approx_sync");
+		pnh.deleteParam("stereo_approx_sync");
+	}
 }
 
 void CommonDataSubscriber::warningLoop()

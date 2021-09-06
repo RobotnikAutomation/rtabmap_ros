@@ -60,6 +60,7 @@ public:
 	CommonDataSubscriber(bool gui);
 	virtual ~CommonDataSubscriber();
 
+	bool deleteParamsOnStop() const  {return deleteParamsOnStop_;}
 	bool isSubscribedToDepth() const  {return subscribedToDepth_;}
 	bool isSubscribedToStereo() const {return subscribedToStereo_;}
 	bool isSubscribedToRGB() const  {return subscribedToRGB_;}
@@ -259,6 +260,7 @@ private:
 	bool approxSync_;
 	boost::thread* warningThread_;
 	bool callbackCalled_;
+	bool deleteParamsOnStop_;
 	bool subscribedToDepth_;
 	bool subscribedToStereo_;
 	bool subscribedToRGB_;
